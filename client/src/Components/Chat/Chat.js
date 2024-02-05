@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import queryString from "query-string";
 import "./Chat.css";
 import io from "socket.io-client";
+import { useLocation } from "react-router";
 
 const Chat = ({ location }) => {
   const socket = io({
@@ -9,7 +9,8 @@ const Chat = ({ location }) => {
   });
 
   const ENDPOINT = "http://localhost:5000";
-  const urlParams = new URLSearchParams(window.location.search);
+  const { search } = useLocation();
+  const urlParams = React.useMemo(() => new URLSearchParams(search), [search]);
 
   // Use state to manage name and room values
   const [name, setName] = useState("");
@@ -19,7 +20,8 @@ const Chat = ({ location }) => {
 
   useEffect(() => {
     // Parse query parameters
-    const { name, room } = queryString.parse(window.location.search);
+    const name = urlParams.get("name");
+    const room = urlParams.get("room");
 
     // Specify transport options when creating the socket connection
     const socket = io(ENDPOINT, {

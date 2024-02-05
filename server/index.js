@@ -1,5 +1,5 @@
 const express = require("express");
-const socketio = require("socket.io");
+const { Server } = require("socket.io");
 const http = require("http");
 const cors = require("cors"); // Import the cors middleware
 
@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 5000;
 const router = require("./router");
 const app = express();
 const server = http.createServer(app);
-const io = socketio(server);
+const io = new Server(server);
 
 const {
   addUser,
