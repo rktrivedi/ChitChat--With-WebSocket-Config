@@ -2,13 +2,16 @@ import React, { useState, useEffect } from "react";
 import "./Chat.css";
 import io from "socket.io-client";
 import { useLocation } from "react-router";
+import InfoBar from "../InfoBar/InfoBar";
+import Input from "../Input/Input";
+import Messages from "../Messages/Messages";
 
 const Chat = ({ location }) => {
-  const socket = io({
+  const ENDPOINT = "http://localhost:5000";
+  const socket = io(ENDPOINT, {
     transports: ["websocket", "polling", "flashsocket"],
   });
 
-  const ENDPOINT = "http://localhost:5000";
   const { search } = useLocation();
   const urlParams = React.useMemo(() => new URLSearchParams(search), [search]);
 
@@ -24,19 +27,16 @@ const Chat = ({ location }) => {
     const room = urlParams.get("room");
 
     // Specify transport options when creating the socket connection
-    const socket = io(ENDPOINT, {
-      transports: ["websocket", "polling", "flashsocket"],
-    });
 
     setName(name);
     setRoom(room);
 
     // Emit join event with name and room
-    socket.emit("join", { name: name, room: room }, ({ error }) => {
+    socket.emit("join", { name, room }, ({}) => {
       // Handle acknowledgment if needed
     });
 
-    console.log("Socket:", socket);
+    // console.log("Socket:", socket);
 
     socket.on("connect", () => {
       console.log("Connected to server");
@@ -63,22 +63,26 @@ const Chat = ({ location }) => {
 
   const sendMessage = (event) => {
     event.preventDefault();
+
     if (message) {
+      console.log(message);
       socket.emit("sendMessage", message, () => setMessage(""));
     }
   };
+
   console.log(message, messages);
+  socket.on(room, () => {});
 
   return (
     <div className="outerContainer">
       <div className="container">
-        <input
-          value={message}
-          onChange={(event) => setMessage(event.target.value)}
-          onKeyPress={(event) =>
-            event.key === "Enter" ? sendMessage(event) : null
-          }
+        <InfoBar room={room} />
+        <Input
+          message={message}
+          setMessage={setMessage}
+          sendMessage={sendMessage}
         />
+        <Messages messages={messages} name={name} />
       </div>
     </div>
   );
