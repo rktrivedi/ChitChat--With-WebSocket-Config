@@ -1,6 +1,8 @@
 import React from "react";
 import "./Message.css";
 
+import ReactEmoji from "react-emoji";
+
 const Message = ({ message: { user, text }, name }) => {
   let isSentByCurrentUser = false;
 
@@ -13,7 +15,7 @@ const Message = ({ message: { user, text }, name }) => {
     <div className="messageContainer justfyEnd">
       <p className="sentText pr-10">{trimeName}</p>
       <div className="messagebox backgroundBlue">
-        <p className="messageText colorWhite">{text}</p>
+        <p className="messageText colorWhite">{ReactEmoji.emojify(text)}</p>
       </div>
     </div>
   ) : (

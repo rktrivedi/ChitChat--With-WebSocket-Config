@@ -18,7 +18,10 @@ const Input = ({ message, setMessage, sendMessage }) => {
         />
         <button
           className="sendButton"
-          onClick={(event) => (sendMessage = { sendMessage })}
+          onClick={(event) => {
+            sendMessage = { sendMessage };
+            console.log(message, event);
+          }}
         >
           Send
         </button>

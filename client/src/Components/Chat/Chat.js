@@ -32,7 +32,7 @@ const Chat = ({ location }) => {
     setRoom(room);
 
     // Emit join event with name and room
-    socket.emit("join", { name, room }, ({}) => {
+    socket.emit("join", { name, room }, ({ error }) => {
       // Handle acknowledgment if needed
     });
 
